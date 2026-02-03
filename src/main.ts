@@ -1,32 +1,36 @@
 import { Plugin } from "obsidian";
 import { AutoAccentSettings, DEFAULT_SETTINGS } from "./settings";
 import { AutoAccentSettingTab } from "./settings-tab";
-import { applyAccentColor, clearAccentColor, isSystemDarkMode } from "./accent-manager";
+import { applyAccentColor, isDarkMode } from "./accent-manager";
 
 export default class AutoAccentPlugin extends Plugin {
   settings: AutoAccentSettings = DEFAULT_SETTINGS;
-  private themeQuery: MediaQueryList | null = null;
-  private boundThemeHandler: ((e: MediaQueryListEvent) => void) | null = null;
 
   async onload(): Promise<void> {
-    await this.loadSettings();
+    console.log("Loading Obsidian Auto Accent Plugin");
+    try {
+        await this.loadSettings();
 
-    this.addSettingTab(new AutoAccentSettingTab(this.app, this));
+        this.addSettingTab(new AutoAccentSettingTab(this.app, this));
 
-    this.themeQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    this.boundThemeHandler = (e: MediaQueryListEvent) => {
-      this.updateAccent(e.matches);
-    };
-    this.themeQuery.addEventListener("change", this.boundThemeHandler);
+        this.app.workspace.onLayoutReady(() => {
+            console.log("Auto Accent: Layout ready, initializing...");
+            this.registerEvent(
+              this.app.workspace.on("css-change", () => {
+                console.log("Auto Accent: CSS change detected");
+                this.updateAccent();
+              })
+            );
 
-    this.updateAccent();
+            this.updateAccent();
+        });
+    } catch (e) {
+        console.error("Auto Accent: Failed to load", e);
+    }
   }
 
   onunload(): void {
-    if (this.themeQuery && this.boundThemeHandler) {
-      this.themeQuery.removeEventListener("change", this.boundThemeHandler);
-    }
-    clearAccentColor();
+    // No specific cleanup needed as we rely on Obsidian's internal state
   }
 
   async loadSettings(): Promise<void> {
@@ -37,9 +41,9 @@ export default class AutoAccentPlugin extends Plugin {
     await this.saveData(this.settings);
   }
 
-  updateAccent(isDark?: boolean): void {
-    const dark = isDark ?? isSystemDarkMode();
+  updateAccent(): void {
+    const dark = isDarkMode();
     const color = dark ? this.settings.darkAccent : this.settings.lightAccent;
-    applyAccentColor(color);
+    applyAccentColor(this.app, color);
   }
 }
