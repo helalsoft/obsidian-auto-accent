@@ -3,7 +3,7 @@
   "name": "Auto Accent",
   "version": "1.0.0",
   "minAppVersion": "1.0.0",
-  "description": "Automatically switches accent color based on system light/dark theme",
+  "description": "Automatically switches Obsidian's accent color based on light or dark mode",
   "author": "Helalsoft",
   "authorUrl": "https://github.com/helalsoft/obsidian-auto-accent",
   "isDesktopOnly": false
