@@ -4,9 +4,10 @@ Automatically switches Obsidian's accent color based on your system's light or d
 
 ## Features
 
-- **System-Aware**: Automatically detects your system's color scheme (Light/Dark).
+- **Theme-Aware**: Automatically detects whether Obsidian is in Light or Dark mode (respects both OS settings and manual overrides).
+- **Persistent**: Saves the accent color to your global configuration, preventing flicker on startup.
 - **Customizable**: Set different accent colors for light and dark modes in the plugin settings.
-- **Native Experience**: Integrates seamlessly with Obsidian's UI using native CSS variables.
+- **Native Experience**: Integrates seamlessly with Obsidian's internal styling API.
 
 ## Installation
 
@@ -24,8 +25,8 @@ Automatically switches Obsidian's accent color based on your system's light or d
 ## Settings
 
 Go to **Settings → Auto accent** to configure your preferred colors:
-- **Light mode accent**: The color applied when your system is in light mode.
-- **Dark mode accent**: The color applied when your system is in dark mode.
+- **Light mode accent**: The color applied when Obsidian is in light mode.
+- **Dark mode accent**: The color applied when Obsidian is in dark mode.
 
 ## License
 
