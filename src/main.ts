@@ -7,17 +7,17 @@ export default class AutoAccentPlugin extends Plugin {
   settings: AutoAccentSettings = DEFAULT_SETTINGS;
 
   async onload(): Promise<void> {
-    console.log("Loading Obsidian Auto Accent Plugin");
+    console.debug("Loading Obsidian Auto Accent Plugin");
     try {
         await this.loadSettings();
 
         this.addSettingTab(new AutoAccentSettingTab(this.app, this));
 
         this.app.workspace.onLayoutReady(() => {
-            console.log("Auto Accent: Layout ready, initializing...");
+            console.debug("Auto Accent: Layout ready, initializing...");
             this.registerEvent(
               this.app.workspace.on("css-change", () => {
-                console.log("Auto Accent: CSS change detected");
+                console.debug("Auto Accent: CSS change detected");
                 this.updateAccent();
               })
             );
@@ -44,6 +44,6 @@ export default class AutoAccentPlugin extends Plugin {
   updateAccent(): void {
     const dark = isDarkMode();
     const color = dark ? this.settings.darkAccent : this.settings.lightAccent;
-    applyAccentColor(this.app, color);
+    void applyAccentColor(this.app, color);
   }
 }

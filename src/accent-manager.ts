@@ -1,4 +1,5 @@
 import { App } from "obsidian";
+import { InternalApp, InternalVault } from "./types";
 
 /**
  * Checks if Obsidian is currently in dark mode
@@ -40,19 +41,17 @@ function hexToHsl(hex: string): { h: number; s: number; l: number } {
  * Applies the accent color using Obsidian's internal API or fallback
  */
 export async function applyAccentColor(app: App, hex: string): Promise<void> {
+  const internalApp = app as InternalApp;
   try {
     // 1. Try internal API
-    // @ts-ignore
-    if (app.customCss && typeof app.customCss.setAccentColor === 'function') {
-        // @ts-ignore
-        if (app.customCss.accentColor?.toLowerCase() === hex.toLowerCase()) return;
-        // @ts-ignore
-        app.customCss.setAccentColor(hex);
+    if (internalApp.customCss && typeof internalApp.customCss.setAccentColor === 'function') {
+        if (internalApp.customCss.accentColor?.toLowerCase() === hex.toLowerCase()) return;
+        internalApp.customCss.setAccentColor(hex);
         return;
     }
     
     // 2. Fallback: Manual CSS + Config Update
-    console.log("Auto Accent: customCss API missing. Using fallback.");
+    console.debug("Auto Accent: customCss API missing. Using fallback.");
     
     // Apply visual styles immediately
     const { h, s, l } = hexToHsl(hex);
@@ -61,24 +60,23 @@ export async function applyAccentColor(app: App, hex: string): Promise<void> {
     document.body.style.setProperty("--accent-l", `${l}%`);
 
     // Persist to appearance.json
-    const configDir = (app.vault as any).configDir || ".obsidian";
+    const configDir = (app.vault as InternalVault).configDir;
     const configPath = `${configDir}/appearance.json`;
     
     try {
-        let config: any = {};
+        let config: Record<string, unknown> = {};
         if (await app.vault.adapter.exists(configPath)) {
              const content = await app.vault.adapter.read(configPath);
-             config = JSON.parse(content);
+             config = JSON.parse(content) as Record<string, unknown>;
         }
         
         if (config.accentColor !== hex) {
             config.accentColor = hex;
             await app.vault.adapter.write(configPath, JSON.stringify(config, null, 2));
-            console.log("Auto Accent: Updated appearance.json");
+            console.debug("Auto Accent: Updated appearance.json");
             
             // Try to trigger internal reload if possible, otherwise CSS vars handle it for now
-            // @ts-ignore
-            app.updateAccentColor?.(); 
+            internalApp.updateAccentColor?.(); 
         }
     } catch (err) {
         console.error("Auto Accent: Failed to update appearance.json", err);
