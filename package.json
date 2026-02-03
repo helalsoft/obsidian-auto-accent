@@ -1,0 +1,20 @@
+{
+  "name": "obsidian-auto-accent",
+  "version": "1.0.0",
+  "description": "Automatically switches Obsidian's accent color based on system light/dark theme",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "node esbuild.config.mjs production",
+    "lint": "eslint ./src/"
+  },
+  "keywords": ["obsidian", "plugin", "accent", "theme"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.13.1",
+    "esbuild": "^0.25.0",
+    "obsidian": "latest",
+    "typescript": "^5.7.3"
+  }
+}

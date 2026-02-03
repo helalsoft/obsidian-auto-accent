@@ -1,0 +1,10 @@
+{
+  "id": "auto-accent",
+  "name": "Auto Accent",
+  "version": "1.0.0",
+  "minAppVersion": "1.0.0",
+  "description": "Automatically switches accent color based on system light/dark theme",
+  "author": "",
+  "authorUrl": "",
+  "isDesktopOnly": false
+}
