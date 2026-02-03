@@ -30,7 +30,7 @@ export default class AutoAccentPlugin extends Plugin {
   }
 
   async loadSettings(): Promise<void> {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData() as Partial<AutoAccentSettings>);
   }
 
   async saveSettings(): Promise<void> {

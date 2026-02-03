@@ -13,7 +13,7 @@ export class AutoAccentSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    containerEl.createEl("h2", { text: "Auto Accent Settings" });
+    new Setting(containerEl).setHeading().setName("Auto accent settings");
 
     new Setting(containerEl)
       .setName("Light mode accent")
